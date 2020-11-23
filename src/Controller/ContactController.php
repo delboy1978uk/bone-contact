@@ -15,7 +15,7 @@ class ContactController extends Controller
      * @return ResponseInterface $response
      * @throws \Exception
      */
-    public function indexAction(ServerRequestInterface $request, array $args): ResponseInterface
+    public function index(ServerRequestInterface $request): ResponseInterface
     {
         $body = $this->view->render('contact::index', []);
 
