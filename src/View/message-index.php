@@ -34,10 +34,9 @@ use Del\Icon;
                 <table class="table table-hover text-nowrap">
                     <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Date Received</th>
                         <th>Name</th>
-                        <th>Date of birth</th>
-                        <th></th>
+                        <th>Subject</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -45,16 +44,16 @@ use Del\Icon;
                     <?php if (count($messages)) {
                         foreach ($messages as $message) { ?>
                             <tr>
-                                <td><a href="/admin/messages/<?= $message->getId() ?>"><?= $message->getId() ?></a></td>
+                                <td><?= $message->getDateReceived()->format('d M Y H:i') ?></td>
                                 <td><?= $message->getName() ?></td>
-                                <td><?= $message->getDob()->format('d M Y') ?></td>
-                                <td><a class="tt" title="view" href="/messages/<?= $message->getId() ?>"><?= Icon::EYE ;?></a></td>
-                                <td><a href="/dog/delete/<?= $message->getId() ?>"><?= Icon::REMOVE ;?></a></td>
+                                <td><?= $message->getSubject() ?></td>
+                                <td><a class="tt" title="view" href="/admin/messages/<?= $message->getId() ?>"><?= Icon::EYE ;?></a>
+                                    <a class="tt" title="delete" href="/admin/messages/<?= $message->getId() ?>/delete"><?= Icon::REMOVE ;?></a></td>
                             </tr>
                         <?php }
                     } else { ?>
                         <tr>
-                            <td colspan="5" class="text-danger">No records have been found in the database.</td>
+                            <td colspan="5" class="text-danger">No messages have been found in the database.</td>
                         </tr>
                     <?php } ?>
 

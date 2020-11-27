@@ -5,6 +5,8 @@ namespace Bone\Contact\Controller;
 use Bone\Contact\Entity\Contact;
 use Bone\Contact\Form\ReplyForm;
 use Bone\Controller\Controller;
+use Bone\Exception;
+use Bone\Http\Response\LayoutResponse;
 use Bone\Mail\EmailMessage;
 use Bone\Mail\Service\MailService;
 use Bone\View\Helper\AlertBox;
@@ -35,6 +37,12 @@ class ContactController extends Controller
 
     /** @var string $emailLayout */
     private $emailLayout;
+
+    /** @var string $formLayout */
+    private $formLayout;
+
+    /** @var string $adminLayout */
+    private $adminLayout;
 
     /** @var bool $storeInDb */
     private $storeInDb;
@@ -71,6 +79,8 @@ class ContactController extends Controller
         $this->storeInDb = $settings['storeInDb'];
         $this->notificationEmailAddress = $settings['notificationEmailAddress'];
         $this->emailLayout = $settings['emailLayout'];
+        $this->formLayout = $settings['formLayout'];
+        $this->adminLayout = $settings['adminLayout'];
         $this->mailService = $mailService;
     }
 
@@ -106,7 +116,7 @@ class ContactController extends Controller
             ]);
         }
 
-        return new HtmlResponse($body);
+        return new LayoutResponse($body, $this->formLayout);
     }
 
     /**
@@ -185,7 +195,7 @@ class ContactController extends Controller
             'paginator' => $this->paginator->render(),
         ]);
 
-        return new HtmlResponse($body);
+        return new LayoutResponse($body, $this->adminLayout);
     }
 
     /**
@@ -201,7 +211,7 @@ class ContactController extends Controller
             'message' => $message,
         ]);
 
-        return new HtmlResponse($body);
+        return new LayoutResponse($body, $this->adminLayout);
     }
 
     /**
@@ -243,7 +253,7 @@ class ContactController extends Controller
             ]);
         }
 
-        return new HtmlResponse($body);
+        return new LayoutResponse($body, $this->adminLayout);
     }
 
     /**
@@ -305,24 +315,33 @@ class ContactController extends Controller
         /** @var Message $message */
         $message = $db->find($id);
 
+        if (!$message) {
+            throw new Exception(Exception::LOST_AT_SEA, 404);
+        }
+
+        $text = '';
+
         if ($request->getMethod() === 'POST') {
             $this->entityManager->remove($message);
             $this->entityManager->flush($message);
+            $id = null;
             $msg = $this->alertBox(Icon::CHECK_CIRCLE . ' Message deleted.', 'warning');
             $form = '<a href="/admin/messages" class="btn btn-lg btn-default">Back</a>';
+            $text = 'The message has been deleted';
         } else {
             $form = $form->render();
             $msg = $this->alertBox(Icon::WARNING . ' Warning, please confirm your intention to delete.', 'danger');
-            $msg .= '<p class="lead">Are you sure you want to delete the message from ' . $message->getEmail() . '?</p>';
+            $text = '<p class="lead">Are you sure you want to delete the message from ' . $message->getEmail() . '?</p>';
         }
 
         $body = $this->view->render('contact::message-delete', [
-            'message' => $message,
+            'messageId' => $id,
             'form' => $form,
             'msg' => $msg,
+            'text' => $text,
         ]);
 
-        return new HtmlResponse($body);
+        return new LayoutResponse($body, $this->adminLayout);
     }
 
     /**

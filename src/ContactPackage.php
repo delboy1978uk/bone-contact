@@ -13,8 +13,10 @@ use Bone\Controller\Init;
 use Bone\Mail\Service\MailService;
 use Bone\Router\Router;
 use Bone\Router\RouterConfigInterface;
+use Bone\User\Http\Middleware\SessionAuth;
 use Bone\View\ViewRegistrationInterface;
 use Doctrine\ORM\EntityManager;
+use League\Route\RouteGroup;
 
 class ContactPackage implements RegistrationInterface, RouterConfigInterface, ViewRegistrationInterface, EntityRegistrationInterface
 {
@@ -24,10 +26,15 @@ class ContactPackage implements RegistrationInterface, RouterConfigInterface, Vi
     public function addToContainer(Container $c)
     {
         $c[ContactController::class] = $c->factory(function (Container $c) {
+            $defaultLayout = $c->get('default_layout');
+            $adminLayout = $c->has('adminLayout') ? $c->get('admin_ayout') : $defaultLayout;
+
             $settings = [
                 'sendThanksEmail' => true,
                 'notificationEmailAddress' => 'info@thelonerganclinic.com',
                 'emailLayout' => 'contact::mail-layout',
+                'formLayout' => $defaultLayout,
+                'adminLayout' => $adminLayout,
                 'formClass' => ContactForm::class
             ];
 
@@ -80,14 +87,19 @@ class ContactPackage implements RegistrationInterface, RouterConfigInterface, Vi
      */
     public function addRoutes(Container $c, Router $router): Router
     {
+        $auth = $c->get(SessionAuth::class);
+
         $router->map('GET', '/contact', [ContactController::class, 'index']);
         $router->map('POST', '/contact', [ContactController::class, 'index']);
-        $router->map('GET', '/admin/messages', [ContactController::class, 'messageIndex']);
-        $router->map('GET', '/admin/messages/{id:number}', [ContactController::class, 'view']);
-        $router->map('GET', '/admin/messages/{id:number}/delete', [ContactController::class, 'delete']);
-        $router->map('POST', '/admin/messages/{id:number}/delete', [ContactController::class, 'delete']);
-        $router->map('GET', '/admin/messages/{id:number}/reply', [ContactController::class, 'reply']);
-        $router->map('POST', '/admin/messages/{id:number}/reply', [ContactController::class, 'reply']);
+
+        $router->group('/admin/messages', function (RouteGroup $route) {
+            $route->map('GET', '/', [ContactController::class, 'messageIndex']);
+            $route->map('GET', '/{id:number}', [ContactController::class, 'view']);
+            $route->map('GET', '/{id:number}/delete', [ContactController::class, 'delete']);
+            $route->map('POST', '/{id:number}/delete', [ContactController::class, 'delete']);
+            $route->map('GET', '/{id:number}/reply', [ContactController::class, 'reply']);
+            $route->map('POST', '/{id:number}/reply', [ContactController::class, 'reply']);
+        })->middlewares([$auth]);
 
         return $router;
     }
