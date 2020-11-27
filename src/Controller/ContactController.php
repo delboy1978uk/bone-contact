@@ -7,6 +7,7 @@ use Bone\Contact\Form\ReplyForm;
 use Bone\Controller\Controller;
 use Bone\Exception;
 use Bone\Http\Response\LayoutResponse;
+use Bone\Http\Response\HtmlResponse;
 use Bone\Mail\EmailMessage;
 use Bone\Mail\Service\MailService;
 use Bone\View\Helper\AlertBox;
@@ -17,7 +18,6 @@ use Del\Form\Field\Submit;
 use Del\Form\Form;
 use Del\Icon;
 use Doctrine\ORM\EntityManager;
-use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
