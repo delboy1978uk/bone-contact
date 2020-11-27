@@ -27,7 +27,7 @@ class ContactPackage implements RegistrationInterface, RouterConfigInterface, Vi
     {
         $c[ContactController::class] = $c->factory(function (Container $c) {
             $defaultLayout = $c->get('default_layout');
-            $adminLayout = $c->has('adminLayout') ? $c->get('admin_ayout') : $defaultLayout;
+            $adminLayout = $c->has('admin_layout') ? $c->get('admin_layout') : $defaultLayout;
 
             $settings = [
                 'sendThanksEmail' => true,
