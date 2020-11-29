@@ -95,7 +95,7 @@ class ContactPackage implements RegistrationInterface, RouterConfigInterface, Vi
 
             if ($settings['adminPages'] === true) {
                 $auth = $c->get(SessionAuth::class);
-                $router->group('/admin/messages', function (RouteGroup $route) {
+                $group = $router->group('/admin/messages', function (RouteGroup $route) {
                     $route->map('GET', '/', [ContactController::class, 'messageIndex']);
                     $route->map('GET', '/{id:number}', [ContactController::class, 'view']);
                     $route->map('GET', '/{id:number}/delete', [ContactController::class, 'delete']);
@@ -103,7 +103,7 @@ class ContactPackage implements RegistrationInterface, RouterConfigInterface, Vi
                     $route->map('GET', '/{id:number}/reply', [ContactController::class, 'reply']);
                     $route->map('POST', '/{id:number}/reply', [ContactController::class, 'reply']);
                 });
-                $router->middlewares([$auth]);
+                $group->middlewares([$auth]);
             }
         }
 
