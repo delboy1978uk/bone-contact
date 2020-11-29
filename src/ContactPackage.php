@@ -87,19 +87,26 @@ class ContactPackage implements RegistrationInterface, RouterConfigInterface, Vi
      */
     public function addRoutes(Container $c, Router $router): Router
     {
-        $auth = $c->get(SessionAuth::class);
-
         $router->map('GET', '/contact', [ContactController::class, 'index']);
         $router->map('POST', '/contact', [ContactController::class, 'index']);
 
-        $router->group('/admin/messages', function (RouteGroup $route) {
-            $route->map('GET', '/', [ContactController::class, 'messageIndex']);
-            $route->map('GET', '/{id:number}', [ContactController::class, 'view']);
-            $route->map('GET', '/{id:number}/delete', [ContactController::class, 'delete']);
-            $route->map('POST', '/{id:number}/delete', [ContactController::class, 'delete']);
-            $route->map('GET', '/{id:number}/reply', [ContactController::class, 'reply']);
-            $route->map('POST', '/{id:number}/reply', [ContactController::class, 'reply']);
-        })->middlewares([$auth]);
+        if ($c->has(SessionAuth::class) && $c->has('bone-contact')) {
+            $settings = $c->has('bone-contact') ? $c->get('bone-contact') : ['adminPages' => true];
+
+            if ($settings['adminPages'] === true) {
+                $auth = $c->get(SessionAuth::class);
+                $router->group('/admin/messages', function (RouteGroup $route) {
+                    $route->map('GET', '/', [ContactController::class, 'messageIndex']);
+                    $route->map('GET', '/{id:number}', [ContactController::class, 'view']);
+                    $route->map('GET', '/{id:number}/delete', [ContactController::class, 'delete']);
+                    $route->map('POST', '/{id:number}/delete', [ContactController::class, 'delete']);
+                    $route->map('GET', '/{id:number}/reply', [ContactController::class, 'reply']);
+                    $route->map('POST', '/{id:number}/reply', [ContactController::class, 'reply']);
+                });
+                $router->middlewares([$auth]);
+            }
+        }
+
 
         return $router;
     }

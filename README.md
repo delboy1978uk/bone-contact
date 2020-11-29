@@ -35,6 +35,7 @@ return [
         'formClass' => \Bone\Contact\Form\ContactForm::class,
         'entityClass' => \Bone\Contact\Entity\Contact::class,
         'storeInDb' => true,
+        'adminPages' => true,
     ],
 ];
 ```
