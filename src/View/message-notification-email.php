@@ -15,6 +15,6 @@ $this->layout($layout, ['title' => $title, 'siteUrl' => $siteUrl, 'logo' => $log
 </div>
 <div style="text-align: left; font-size: 25px; font-family: Helvetica, Arial, sans-serif; color: #333333; " class="padding">
     <p>You sent a the following reply:</p>
-    <p><strong><?= $data['subject'] ?></strong></p>
-    <p><?= nl2br($data['message']) ?></p>
+    <p><strong><?= $data['tyuiop'] ?></strong></p>
+    <p><?= nl2br($data['zxcvb']) ?></p>
 </div>

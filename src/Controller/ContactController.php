@@ -161,11 +161,11 @@ class ContactController extends Controller
 
         if ($this->storeInDb === true && $this->entityClass === Contact::class) {
             $contact = new Contact();
-            $contact->setName($data['name']);
-            $contact->setTelephone($data['telephone']);
-            $contact->setEmail($data['email']);
-            $contact->setSubject($data['subject']);
-            $contact->setMessage($data['message']);
+            $contact->setName($data['asdfgh']);
+            $contact->setTelephone($data['qwerty']);
+            $contact->setEmail($data['ghjkl']);
+            $contact->setSubject($data['tyuiop']);
+            $contact->setMessage($data['zxcvb']);
             $contact->setDateReceived(new DateTime());
             $this->entityManager->persist($contact);
             $this->entityManager->flush($contact);
