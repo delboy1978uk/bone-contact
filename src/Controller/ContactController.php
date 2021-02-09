@@ -145,7 +145,7 @@ class ContactController extends Controller
 
         if ($this->sendThanksEmail) {
             $mail = new EmailMessage();
-            $mail->setTo($data['email']);
+            $mail->setTo($data['ghjkl']);
             $mail->setSubject('Thanks for contacting ' . $title);
             $mail->setTemplate('contact::thanks-email');
             $mail->setViewData([
