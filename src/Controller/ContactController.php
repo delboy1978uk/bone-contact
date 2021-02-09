@@ -131,7 +131,7 @@ class ContactController extends Controller
         $title = $config->getTitle();
         $mail = new EmailMessage();
         $mail->setTo($this->notificationEmailAddress);
-        $mail->setSubject('New message from ' . $data['name']);
+        $mail->setSubject('New message from ' . $data['asdfgh']);
         $mail->setTemplate('contact::notification-email');
         $mail->setViewData([
             'siteUrl' => $url,
